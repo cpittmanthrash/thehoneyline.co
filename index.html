@@ -1,7 +1,447 @@
 <!DOCTYPE html>
-<html>
-<head><title>The Honey Line</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Honeyline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Cormorant+SC:wght@300;400&family=Jost:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #faf6f0;
+      --warm-white: #fdf9f4;
+      --ink: #1a1714;
+      --ink-soft: #3d3830;
+      --honey: #c9943a;
+      --honey-light: #e8c97a;
+      --honey-pale: #f5ead5;
+      --border: rgba(26,23,20,0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Jost', system-ui, sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      position: relative;
+      text-align: center;
+    }
+
+    /* Subtle honeycomb pattern in background */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zm0-2l26-15V18L28 2 2 18v30l26 15z' fill='%23c9943a' fill-opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+    }
+
+    .logo-wrap {
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1.2s ease forwards;
+    }
+
+    .logo-wrap img {
+      width: 180px;
+      height: auto;
+      filter: contrast(1.1);
+    }
+
+    .tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.2s ease forwards;
+    }
+
+    .mission {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--honey);
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.35s ease forwards;
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--honey), transparent);
+      margin: 0 auto 2.5rem;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.45s ease forwards;
+    }
+
+    .hero-body {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: var(--ink-soft);
+      max-width: 440px;
+      margin: 0 auto 3rem;
+      opacity: 0;
+      animation: fadeUp 1.2s 0.55s ease forwards;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      animation: fadeUp 1.2s 1s ease forwards;
+      cursor: pointer;
+    }
+
+    .scroll-hint span {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--honey);
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--honey), transparent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    /* ── OFFERINGS SECTION ── */
+    .offerings {
+      padding: 6rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      color: var(--honey);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      text-align: center;
+      margin-bottom: 0.8rem;
+      color: var(--ink);
+    }
+
+    .section-sub {
+      font-size: 0.9rem;
+      color: var(--ink-soft);
+      text-align: center;
+      line-height: 1.8;
+      max-width: 480px;
+      margin: 0 auto 4rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26,23,20,0.08);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--honey-light), var(--honey));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-eyebrow {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--honey);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 0.8rem;
+      line-height: 1.3;
+      color: var(--ink);
+    }
+
+    .card-body {
+      font-size: 0.875rem;
+      line-height: 1.85;
+      color: var(--ink-soft);
+      margin-bottom: 1.8rem;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      color: var(--honey);
+      text-decoration: none;
+      transition: gap 0.2s ease;
+    }
+
+    .card-link:hover { gap: 14px; }
+
+    .card-link::after {
+      content: '→';
+      font-family: serif;
+    }
+
+    .card.coming-soon {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .card.coming-soon:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--ink-soft);
+      margin-left: 8px;
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--honey-pale);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .about-strip blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.3rem, 2.5vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--ink);
+      max-width: 620px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .about-strip cite {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--honey);
+      font-style: normal;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+
+    footer img {
+      width: 48px;
+      opacity: 0.5;
+      filter: contrast(1.1);
+    }
+
+    footer p {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--ink-soft);
+      opacity: 0.6;
+    }
+
+    footer a {
+      color: var(--honey);
+      text-decoration: none;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50%       { opacity: 0.4; transform: scaleY(0.7); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .hero { padding: 3rem 1.5rem; }
+      .logo-wrap img { width: 140px; }
+      .offerings { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
 <body>
-<h1>Coming soon</h1>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="logo-wrap">
+        <!-- Replace Transparent_2.png with the actual path once uploaded to GitHub -->
+        <img src="Transparent_2.png" alt="The Honeyline" />
+      </div>
+
+      <p class="mission">Facilitating kindness toward ourselves, each other &amp; the world</p>
+
+      <h1 class="tagline">Resources crafted with<br />intention &amp; care</h1>
+
+      <div class="divider"></div>
+
+      <p class="hero-body">
+        The Honeyline is a small, independent studio creating thoughtful digital tools and guides for people navigating life's bigger decisions — with clarity, warmth, and a little less overwhelm.
+      </p>
+    </div>
+
+    <div class="scroll-hint" onclick="document.getElementById('offerings').scrollIntoView({behavior:'smooth'})">
+      <span>Explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <blockquote>
+      "The best research doesn't just inform — it makes you feel like someone did the hard work alongside you."
+    </blockquote>
+    <cite>— The Honeyline</cite>
+  </div>
+
+  <!-- OFFERINGS -->
+  <section class="offerings" id="offerings">
+    <p class="section-label">What we make</p>
+    <h2 class="section-title">Guides &amp; Tools</h2>
+    <p class="section-sub">
+      Each resource is built from a real problem — the kind where you open 40 tabs and still don't feel sure. We close the tabs for you.
+    </p>
+
+    <div class="card-grid">
+
+      <!-- LIVE TOOL -->
+      <div class="card">
+        <div class="card-eyebrow">Family &amp; Travel</div>
+        <h3 class="card-title">Family Expat<br />Resource Guide</h3>
+        <p class="card-body">
+          Planning a year abroad with your family? Skip the research spiral. Tell us about your family — kids, pets, budget, priorities — and we generate a personalized guide scoring your chosen destinations across visa logistics, real costs, schools, transit, and more.
+        </p>
+        <a href="/family-expat-resource-guide" class="card-link">Generate your guide</a>
+      </div>
+
+      <!-- COMING SOON 1 -->
+      <div class="card coming-soon">
+        <div class="card-eyebrow">Coming Soon <span class="badge">2026</span></div>
+        <h3 class="card-title">More guides<br />on the way</h3>
+        <p class="card-body">
+          The Honeyline is just getting started. New resources are in the works — the same thoughtful, personalized approach applied to other decisions worth getting right.
+        </p>
+        <span class="card-link" style="pointer-events:none;">Stay tuned</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="Transparent_2.png" alt="The Honeyline mark" />
+    <p>© 2026 The Honeyline &nbsp;·&nbsp; <a href="mailto:chelsea@thehoneyline.co">chelsea@thehoneyline.co</a></p>
+    <p style="margin-top: 4px;">Made with care &nbsp;·&nbsp; thehoneyline.co</p>
+  </footer>
+
 </body>
 </html>
