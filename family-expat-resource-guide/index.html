@@ -1,1 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expat Family Guide — Personalized Relocation Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f7f6f3; font-family: 'DM Sans', system-ui, sans-serif; color: #1a1a1a; font-size: 15px; line-height: 1.6; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select, textarea { font-family: inherit; }
+    a { color: #2d5986; }
+    h1, h2, .step-title, .guide-header h1 { font-family: 'DM Serif Display', Georgia, serif; }
 
+    .step-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .step-label {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #c9a84c;
+      margin-bottom: 6px;
+    }
+    .step-title {
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: #1e3a5f;
+      margin-bottom: 1rem;
+    }
+    .input-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 140px;
+    }
+    .input-group label {
+      font-size: 12px;
+      color: #555;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .input-group input, .input-group select {
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 15px;
+      background: #fafafa;
+    }
+    .input-group input:focus, .input-group select:focus {
+      outline: none;
+      border-color: #2d5986;
+      background: white;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: #e8f0fb;
+      border: 1px solid #bfdbfe;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #1e3a5f;
+    }
+    .tag button {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .priority-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: #f8f9fb;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: grab;
+      user-select: none;
+      transition: box-shadow 0.15s;
+    }
+    .priority-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .priority-rank {
+      width: 24px; height: 24px;
+      background: #1e3a5f;
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: bold; flex-shrink: 0;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #1e3a5f, #2d5986);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: white;
+      color: #1e3a5f;
+      border: 1px solid #1e3a5f;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+    .btn-secondary:hover { background: #f0f6ff; }
+    .dest-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .dest-chip.selected {
+      background: #1e3a5f;
+      color: white;
+      border-color: #1e3a5f;
+    }
+    .dest-chip:hover:not(.selected) { background: #f0f6ff; border-color: #2d5986; }
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+    }
+    .payment-box {
+      background: linear-gradient(135deg, #1e3a5f, #2d5986);
+      color: white;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+    .loading-pulse {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 3rem;
+      text-align: center;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: #1e3a5f;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .guide-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2d5986 50%, #1a4a73 100%);
+      padding: 2rem;
+      color: white;
+      border-bottom: 4px solid #c9a84c;
+      border-radius: 12px 12px 0 0;
+    }
+    .dest-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+    .dest-card-header {
+      padding: 1rem 1.25rem;
+      background: linear-gradient(135deg, #1e3a5f, #2d5986);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dest-card-body {
+      padding: 1.25rem;
+    }
+    .category-row {
+      border-top: 1px solid #f0f4f8;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+    .source-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      padding: 4px 8px;
+      background: #f0f6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      color: #2d5986;
+      text-decoration: none;
+      margin: 3px;
+    }
+    .source-link:hover { background: #dbeafe; }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .checkbox-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: white;
+    }
+    .checkbox-chip.checked {
+      background: #e8f0fb;
+      border-color: #2d5986;
+      color: #1e3a5f;
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const { useState, useEffect, useRef } = React;
+
+  // ── CONFIGURATION ──────────────────────────────────────────────────────────
+  // Replace with your Vercel backend URL after deploying
+  const API_BASE = 'https://expat-guide-api.vercel.app';
+  // ──────────────────────────────────────────────────────────────────────────
+
+  const CURATED_DESTINATIONS = [
+    { name: "Mexico City, Mexico", flag: "🇲🇽" },
+    { name: "Oaxaca, Mexico", flag: "🇲🇽" },
+    { name: "San Miguel de Allende, Mexico", flag: "🇲🇽" },
+    { name: "Mérida, Mexico", flag: "🇲🇽" },
+    { name: "Puerto Vallarta, Mexico", flag: "🇲🇽" },
+    { name: "Montréal, Canada", flag: "🇨🇦" },
+    { name: "Québec City, Canada", flag: "🇨🇦" },
+    { name: "Vancouver, Canada", flag: "🇨🇦" },
+    { name: "Toronto, Canada", flag: "🇨🇦" },
+    { name: "Costa Rica (San José area)", flag: "🇨🇷" },
+    { name: "Paris, France", flag: "🇫🇷" },
+    { name: "Montpellier, France", flag: "🇫🇷" },
+    { name: "Lyon, France", flag: "🇫🇷" },
+    { name: "Barcelona, Spain", flag: "🇪🇸" },
+    { name: "Madrid, Spain", flag: "🇪🇸" },
+    { name: "Seville, Spain", flag: "🇪🇸" },
+    { name: "Valencia, Spain", flag: "🇪🇸" },
+    { name: "London, UK", flag: "🇬🇧" },
+    { name: "Edinburgh, UK", flag: "🇬🇧" },
+    { name: "Lisbon, Portugal", flag: "🇵🇹" },
+    { name: "Porto, Portugal", flag: "🇵🇹" },
+    { name: "Amsterdam, Netherlands", flag: "🇳🇱" },
+    { name: "Berlin, Germany", flag: "🇩🇪" },
+    { name: "Munich, Germany", flag: "🇩🇪" },
+    { name: "Vienna, Austria", flag: "🇦🇹" },
+    { name: "Prague, Czech Republic", flag: "🇨🇿" },
+    { name: "Kraków, Poland", flag: "🇵🇱" },
+    { name: "Oslo, Norway", flag: "🇳🇴" },
+    { name: "Copenhagen, Denmark", flag: "🇩🇰" },
+    { name: "Stockholm, Sweden", flag: "🇸🇪" },
+    { name: "Tokyo, Japan", flag: "🇯🇵" },
+    { name: "Osaka, Japan", flag: "🇯🇵" },
+    { name: "Kyoto, Japan", flag: "🇯🇵" },
+    { name: "Chiang Mai, Thailand", flag: "🇹🇭" },
+    { name: "Bangkok, Thailand", flag: "🇹🇭" },
+    { name: "Medellín, Colombia", flag: "🇨🇴" },
+    { name: "Buenos Aires, Argentina", flag: "🇦🇷" },
+    { name: "Tbilisi, Georgia", flag: "🇬🇪" },
+    { name: "Bali, Indonesia", flag: "🇮🇩" },
+    { name: "Melbourne, Australia", flag: "🇦🇺" },
+  ];
+
+  const ALL_PRIORITIES = [
+    "Ease of visa/logistics",
+    "Affordability",
+    "Quality of life",
+    "Safety",
+    "English-friendliness",
+    "Transit/walkability (no car)",
+    "Child education",
+    "Easy flights home",
+    "Pet-friendliness",
+    "Weather/climate",
+    "Healthcare quality",
+    "Expat community",
+  ];
+
+  // Returns priorities filtered to what's relevant for this family
+  const getRelevantPriorities = (profile) => {
+    return ALL_PRIORITIES.filter(p => {
+      if (p === "Child education" && profile.children.length === 0) return false;
+      if (p === "Pet-friendliness" && profile.pets.length === 0) return false;
+      return true;
+    });
+  };
+
+  const WORK_SITUATIONS = [
+    "Remote employee (US employer)",
+    "Freelancer / self-employed",
+    "Retired / passive income",
+    "Sabbatical / unpaid leave",
+    "Student",
+    "Seeking local employment",
+  ];
+
+  const PET_TYPES = ["Cat", "Dog", "Other"];
+
+  const scoreColor = (s) => s >= 4 ? "#16a34a" : s === 3 ? "#ca8a04" : "#dc2626";
+
+  // ── DRAG TO REORDER PRIORITIES ─────────────────────────────────────────────
+  function PriorityRanker({ priorities, onChange }) {
+    const dragItem = useRef(null);
+    const dragOver = useRef(null);
+
+    const handleDragStart = (i) => { dragItem.current = i; };
+    const handleDragEnter = (i) => { dragOver.current = i; };
+    const handleDragEnd = () => {
+      const arr = [...priorities];
+      const dragged = arr.splice(dragItem.current, 1)[0];
+      arr.splice(dragOver.current, 0, dragged);
+      dragItem.current = null;
+      dragOver.current = null;
+      onChange(arr);
+    };
+
+    return (
+      <div>
+        <p style={{ fontSize: 13, color: "#666", marginBottom: 10 }}>Drag to reorder — #1 is most important to your family</p>
+        {priorities.map((p, i) => (
+          <div key={p} className="priority-item"
+            draggable
+            onDragStart={() => handleDragStart(i)}
+            onDragEnter={() => handleDragEnter(i)}
+            onDragEnd={handleDragEnd}
+            onDragOver={e => e.preventDefault()}>
+            <div className="priority-rank">{i + 1}</div>
+            <span style={{ fontSize: 14, flex: 1 }}>{p}</span>
+            <span style={{ color: "#ccc", fontSize: 16 }}>⠿</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  // ── GUIDE DISPLAY ──────────────────────────────────────────────────────────
+  function GuideDisplay({ guide, profile, onClearGuide }) {
+    const [expanded, setExpanded] = useState(0);
+    const [pdfLoading, setPdfLoading] = useState(false);
+
+    const cats = [
+      { id: "visa", label: "Visa", icon: "✈️" },
+      { id: "cost", label: "Cost", icon: "💰" },
+      { id: "transit", label: "Transit", icon: "🚶" },
+      { id: "schooling", label: "Schooling", icon: "🎒" },
+      { id: "pets", label: "Pets", icon: "🐾" },
+      { id: "safety", label: "Safety", icon: "🛡️" },
+      { id: "flights", label: "Flights", icon: "🛫" },
+      { id: "english", label: "English", icon: "🗣️" },
+    ];
+
+    const handleDownloadPDF = async () => {
+      setPdfLoading(true);
+      const previousExpanded = expanded;
+      try {
+        // Dynamically load html2pdf
+        await new Promise((resolve, reject) => {
+          if (window.html2pdf) { resolve(); return; }
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+          script.onload = resolve;
+          script.onerror = reject;
+          document.head.appendChild(script);
+        });
+
+        // Expand all cards — set expanded to a special "all" value
+        setExpanded('all');
+
+        // Wait for React to re-render with all cards open
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const content = document.getElementById('guide-content');
+        const opts = {
+          margin: [10, 10, 10, 10],
+          filename: `expat-guide-${new Date().toISOString().slice(0,10)}.pdf`,
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 1.5, useCORS: true, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+        };
+        await window.html2pdf().set(opts).from(content).save();
+      } catch (e) {
+        alert('PDF download failed. Please try printing the page instead (Ctrl/Cmd + P).');
+      } finally {
+        // Restore the previously expanded card
+        setExpanded(previousExpanded);
+        setPdfLoading(false);
+      }
+    };
+
+    return (
+      <div>
+        {/* Saved banner */}
+        <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10, padding: "10px 16px", marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ color: "#16a34a", fontSize: 16 }}>✓</span>
+            <span style={{ fontSize: 13, color: "#166534" }}>
+              <strong>Your guide is saved in this browser.</strong> You can close this tab and return to this URL to retrieve it.
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={handleDownloadPDF} disabled={pdfLoading}
+              style={{ padding: "6px 14px", background: "#1e3a5f", color: "white", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: pdfLoading ? "not-allowed" : "pointer", opacity: pdfLoading ? 0.7 : 1 }}>
+              {pdfLoading ? "Preparing PDF…" : "⬇ Download PDF"}
+            </button>
+            <button onClick={onClearGuide}
+              style={{ padding: "6px 12px", background: "white", color: "#666", border: "1px solid #d1d5db", borderRadius: 6, fontSize: 12, cursor: "pointer" }}>
+              Start new guide
+            </button>
+          </div>
+        </div>
+
+        <div id="guide-content">
+        <div className="guide-header">
+          <div style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 6 }}>Your Personalized Expat Guide</div>
+          <h1 style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", fontWeight: "normal", marginBottom: 8 }}>Where Should Your Family Live?</h1>
+          <p style={{ fontSize: 13, color: "#b8cfe8" }}>{guide.familySummary}</p>
+          {guide.topPick && (
+            <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(201,168,76,0.2)", border: "1px solid #c9a84c", borderRadius: 8, fontSize: 13 }}>
+              ⭐ <strong>Top pick for your family:</strong> {guide.topPick}
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: "1.5rem 0" }}>
+          {guide.dealBreakers && guide.dealBreakers.length > 0 && (
+            <div style={{ padding: "1rem 1.25rem", background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 8, marginBottom: 16 }}>
+              <strong style={{ fontSize: 13, color: "#92400e" }}>⚠️ Deal-breakers for your family</strong>
+              <ul style={{ margin: "6px 0 0 0", paddingLeft: 18, fontSize: 12, color: "#78350f", lineHeight: 1.8 }}>
+                {guide.dealBreakers.map((d, i) => <li key={i}>{d}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {guide.destinations && guide.destinations.map((dest, di) => (
+            <div key={di} className="dest-card">
+              <div className="dest-card-header" onClick={() => {
+                if (expanded === 'all') return; // don't toggle during PDF generation
+                setExpanded(expanded === di ? -1 : di);
+              }}>
+                <span style={{ fontSize: 28 }}>{dest.flag}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 15 }}>{dest.name}</div>
+                  <div style={{ fontSize: 12, color: "#b8cfe8", marginTop: 2 }}>{dest.tagline}</div>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                  {cats.map(c => {
+                    const score = dest.scores?.[c.id]?.score || 0;
+                    return (
+                      <div key={c.id} title={c.label} style={{
+                        width: 22, height: 22, borderRadius: "50%",
+                        background: scoreColor(score),
+                        color: "white", fontSize: 10, fontWeight: "bold",
+                        display: "flex", alignItems: "center", justifyContent: "center"
+                      }}>{score}</div>
+                    );
+                  })}
+                </div>
+                {expanded !== 'all' && <span style={{ marginLeft: 8, fontSize: 18, color: "#b8cfe8" }}>{expanded === di ? "▲" : "▼"}</span>}
+              </div>
+
+              {(expanded === di || expanded === 'all') && (
+                <div className="dest-card-body">
+                  {/* Priority Analysis */}
+                  {dest.priorityAnalysis && (
+                    <div style={{ padding: "10px 12px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 8, marginBottom: 14, fontSize: 13, color: "#0c4a6e" }}>
+                      🎯 <strong>For your family specifically:</strong> {dest.priorityAnalysis}
+                    </div>
+                  )}
+
+                  {/* Pros / Cons */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+                    <div style={{ padding: "10px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
+                      <strong style={{ fontSize: 12, color: "#166534", display: "block", marginBottom: 6 }}>✅ PROS</strong>
+                      {dest.pros?.map((p, i) => <div key={i} style={{ fontSize: 13, color: "#166534", marginBottom: 4 }}>• {p}</div>)}
+                    </div>
+                    <div style={{ padding: "10px", background: "#fef2f2", borderRadius: 8, border: "1px solid #fecaca" }}>
+                      <strong style={{ fontSize: 12, color: "#991b1b", display: "block", marginBottom: 6 }}>⚠️ CONS</strong>
+                      {dest.cons?.map((c, i) => <div key={i} style={{ fontSize: 13, color: "#991b1b", marginBottom: 4 }}>• {c}</div>)}
+                    </div>
+                  </div>
+
+                  {/* Category details */}
+                  {cats.map(cat => {
+                    const data = dest.scores?.[cat.id];
+                    if (!data) return null;
+                    const score = data.score || 0;
+                    const color = scoreColor(score);
+                    return (
+                      <div key={cat.id} className="category-row">
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                          <span>{cat.icon}</span>
+                          <strong style={{ fontSize: 13 }}>{cat.label}</strong>
+                          <div className="score-badge" style={{ background: color }}>{score}</div>
+                          {data.label && <span style={{ fontSize: 10, padding: "2px 6px", background: color + "15", color: color, borderRadius: 4, border: `1px solid ${color}30`, fontWeight: 600 }}>{data.label}</span>}
+                        </div>
+                        <p style={{ fontSize: 13, color: "#444", marginBottom: 4 }}>{data.summary}</p>
+                        {data.tailored && (
+                          <p style={{ fontSize: 12, color: "#2d5986", fontStyle: "italic", marginBottom: 4 }}>→ For your family: {data.tailored}</p>
+                        )}
+                        {data.monthly && (
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 6 }}>
+                            <span style={{ fontSize: 11, padding: "3px 8px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 4 }}>Monthly: {data.monthly}</span>
+                            {data.rent && <span style={{ fontSize: 11, padding: "3px 8px", background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 4 }}>Rent: {data.rent}</span>}
+                          </div>
+                        )}
+                        {data.hub && (
+                          <div style={{ fontSize: 11, marginTop: 4, padding: "3px 8px", background: "#fafaf0", border: "1px solid #e0e0a0", borderRadius: 4, display: "inline-block" }}>Route: {data.hub}</div>
+                        )}
+                        {data.details && data.details.length > 0 && (
+                          <ul style={{ margin: "6px 0 0 0", paddingLeft: 16, fontSize: 13, color: "#555", lineHeight: 1.8 }}>
+                            {data.details.map((d, i) => (
+                              <li key={i} style={{ color: d.includes("⚠️") || d.includes("START") ? "#dc2626" : "#555" }}>{d}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    );
+                  })}
+
+                  {/* Sources */}
+                  {dest.sources && dest.sources.length > 0 && (
+                    <div style={{ borderTop: "1px solid #e8eef4", paddingTop: 12, marginTop: 12 }}>
+                      <strong style={{ fontSize: 11, color: "#1e3a5f", display: "block", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.08em" }}>🔗 Sources</strong>
+                      <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        {dest.sources.map((s, i) => (
+                          <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="source-link">↗ {s.label}</a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div style={{ textAlign: "center", fontSize: 11, color: "#999", paddingTop: 16, borderTop: "1px solid #e8eef4" }}>
+          Generated {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} •
+          Visa rules and costs change frequently — verify with official consulate and government sources •
+          Not legal or immigration advice
+        </div>
+        </div> {/* end guide-content */}
+
+        {/* Bottom action bar */}
+        <div style={{ display: "flex", justifyContent: "center", gap: 12, padding: "1.5rem 0", flexWrap: "wrap" }}>
+          <button onClick={handleDownloadPDF} disabled={pdfLoading}
+            style={{ padding: "10px 24px", background: "#1e3a5f", color: "white", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: pdfLoading ? "not-allowed" : "pointer", opacity: pdfLoading ? 0.7 : 1 }}>
+            {pdfLoading ? "Preparing PDF…" : "⬇ Download PDF"}
+          </button>
+          <button onClick={onClearGuide}
+            style={{ padding: "10px 20px", background: "white", color: "#1e3a5f", border: "1px solid #1e3a5f", borderRadius: 8, fontSize: 14, cursor: "pointer" }}>
+            Start a new guide
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── MAIN APP ───────────────────────────────────────────────────────────────
+  function App() {
+    const [step, setStep] = useState(1);
+    const [profile, setProfile] = useState({
+      adults: 2,
+      children: [],
+      pets: [],
+      monthlyBudget: 4000,
+      workSituation: 'Remote employee (US employer)',
+      homeAirport: '',
+      carFree: true,
+      mustHaves: [],
+      destinations: [],
+      priorities: ALL_PRIORITIES.filter(p => p !== "Child education" && p !== "Pet-friendliness"),
+    });
+
+    // Re-sync priorities whenever children or pets change —
+    // add relevant ones if not present, remove irrelevant ones
+    useEffect(() => {
+      setProfile(p => {
+        const relevant = getRelevantPriorities(p);
+        // Keep existing order, just add/remove as needed
+        const kept = p.priorities.filter(pr => relevant.includes(pr));
+        const added = relevant.filter(pr => !p.priorities.includes(pr));
+        return { ...p, priorities: [...kept, ...added] };
+      });
+    }, [profile.children.length, profile.pets.length]);
+    const [customDest, setCustomDest] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [loadingStage, setLoadingStage] = useState(0);
+    const [guide, setGuide] = useState(null);
+    const [error, setError] = useState(null);
+    const [retrySessionId, setRetrySessionId] = useState(null);
+    const [retryProfile, setRetryProfile] = useState(null);
+    const [retryCount, setRetryCount] = useState(0);
+
+    const LOADING_STAGES = [
+      "Verifying your payment…",
+      "Analyzing visa requirements for your work situation…",
+      "Scoring affordability against your budget…",
+      "Evaluating pet import complexity…",
+      "Checking school options for your children's ages…",
+      "Calculating flight routes from your home airport…",
+      "Compiling your personalized guide…",
+    ];
+
+    // Check for Stripe return — only if no saved guide was already restored
+    useEffect(() => {
+      const saved = localStorage.getItem('expat_saved_guide');
+      if (saved) return; // already handled by the restore effect above
+
+      const params = new URLSearchParams(window.location.search);
+      const sessionId = params.get('session_id');
+      const cancelled = params.get('cancelled');
+
+      if (sessionId) {
+        const savedProfile = localStorage.getItem('expat_profile');
+        if (savedProfile) {
+          const parsedProfile = JSON.parse(savedProfile);
+          setRetrySessionId(sessionId);
+          setRetryProfile(parsedProfile);
+          setLoading(true);
+          setStep(5);
+          generateGuide(sessionId, parsedProfile);
+        }
+      }
+      if (cancelled) {
+        setError('Payment was cancelled. You can try again below.');
+        setStep(4);
+      }
+    }, []);
+
+    // Animate loading stages
+    useEffect(() => {
+      if (!loading) { setLoadingStage(0); return; }
+      const interval = setInterval(() => {
+        setLoadingStage(s => Math.min(s + 1, LOADING_STAGES.length - 1));
+      }, 8000);
+      return () => clearInterval(interval);
+    }, [loading]);
+
+    const generateGuide = async (sessionId, profileData) => {
+      setError(null);
+      try {
+        const res = await fetch(`${API_BASE}/api/generate-guide`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, userProfile: profileData }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        setGuide(data.guide);
+        setStep(6);
+        // Save guide to localStorage so user can return to it
+        try {
+          localStorage.setItem('expat_saved_guide', JSON.stringify(data.guide));
+          localStorage.setItem('expat_saved_date', new Date().toISOString());
+        } catch(e) { /* localStorage full or blocked — not critical */ }
+        localStorage.removeItem('expat_profile');
+        window.history.replaceState({}, '', window.location.pathname);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || 'Something went wrong generating your guide.');
+        setStep(7);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Check for a previously saved guide on first load
+    useEffect(() => {
+      const saved = localStorage.getItem('expat_saved_guide');
+      const savedDate = localStorage.getItem('expat_saved_date');
+      if (saved && savedDate) {
+        // Only restore if saved within last 90 days
+        const age = Date.now() - new Date(savedDate).getTime();
+        const ninetyDays = 90 * 24 * 60 * 60 * 1000;
+        if (age < ninetyDays) {
+          try {
+            setGuide(JSON.parse(saved));
+            setStep(6);
+            return; // Skip Stripe check below if we restored a guide
+          } catch(e) { /* corrupted — ignore */ }
+        } else {
+          localStorage.removeItem('expat_saved_guide');
+          localStorage.removeItem('expat_saved_date');
+        }
+      }
+    }, []);
+
+    const handleClearGuide = () => {
+      if (window.confirm('This will clear your saved guide. Are you sure?')) {
+        localStorage.removeItem('expat_saved_guide');
+        localStorage.removeItem('expat_saved_date');
+        setGuide(null);
+        setStep(1);
+      }
+    };
+
+    const handleRetry = () => {
+      if (retryCount >= 2) {
+        setError('We were unable to generate your guide after multiple attempts. Please email us at chelsea@thehoneyline.co with your order and we will resolve it within 24 hours.');
+        return;
+      }
+      setRetryCount(c => c + 1);
+      setLoading(true);
+      setStep(5);
+      generateGuide(retrySessionId, retryProfile);
+    };
+
+    const handlePayment = async () => {
+      if (profile.destinations.length === 0) {
+        setError('Please add at least one destination.');
+        return;
+      }
+      setError(null);
+      setLoading(true);
+      try {
+        localStorage.setItem('expat_profile', JSON.stringify(profile));
+        const res = await fetch(`${API_BASE}/api/create-checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userProfile: profile }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        window.location.href = data.url;
+      } catch (err) {
+        setError('Could not connect to payment server. Please try again.');
+        setLoading(false);
+      }
+    };
+
+    const addChild = () => setProfile(p => ({ ...p, children: [...p.children, { age: 4 }] }));
+    const removeChild = (i) => setProfile(p => ({ ...p, children: p.children.filter((_, idx) => idx !== i) }));
+    const updateChildAge = (i, age) => setProfile(p => ({ ...p, children: p.children.map((c, idx) => idx === i ? { age: parseInt(age) } : c) }));
+
+    const addPet = () => setProfile(p => ({ ...p, pets: [...p.pets, { type: 'Cat', count: 1 }] }));
+    const removePet = (i) => setProfile(p => ({ ...p, pets: p.pets.filter((_, idx) => idx !== i) }));
+    const updatePet = (i, field, val) => setProfile(p => ({ ...p, pets: p.pets.map((pet, idx) => idx === i ? { ...pet, [field]: val } : pet) }));
+
+    const toggleDestination = (name) => {
+      setProfile(p => ({
+        ...p,
+        destinations: p.destinations.includes(name)
+          ? p.destinations.filter(d => d !== name)
+          : [...p.destinations, name],
+      }));
+    };
+
+    const addCustomDest = () => {
+      const trimmed = customDest.trim();
+      if (trimmed && !profile.destinations.includes(trimmed)) {
+        setProfile(p => ({ ...p, destinations: [...p.destinations, trimmed] }));
+        setCustomDest('');
+      }
+    };
+
+    const toggleMustHave = (item) => {
+      setProfile(p => ({
+        ...p,
+        mustHaves: p.mustHaves.includes(item)
+          ? p.mustHaves.filter(m => m !== item)
+          : [...p.mustHaves, item],
+      }));
+    };
+
+    const mustHaveOptions = ["Car-free lifestyle (transit/walk/bike)","School for children","Pet import possible","English widely spoken","Under $3,000/mo","Under $5,000/mo","Direct flights to East Coast US","Warm weather year-round","Strong expat community","Healthcare quality"];
+
+    const progress = Math.round((Math.min(step, 4) / 4) * 100);
+
+    if (step === 5 || loading) {
+      return (
+        <div style={{ maxWidth: 600, margin: "4rem auto", padding: "0 1rem" }}>
+          <div className="loading-pulse">
+            <div className="spinner" />
+            <h2 style={{ fontWeight: "normal", color: "#1e3a5f" }}>Generating your personalized guide…</h2>
+            <p style={{ color: "#666", fontSize: 14, marginBottom: 16 }}>
+              Claude is researching each destination based on your family's specific profile. This takes about 30–60 seconds.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%", maxWidth: 380 }}>
+              {LOADING_STAGES.map((msg, i) => (
+                <div key={i} style={{
+                  fontSize: 13, display: "flex", alignItems: "center", gap: 8,
+                  color: i < loadingStage ? "#16a34a" : i === loadingStage ? "#1e3a5f" : "#ccc",
+                  transition: "color 0.4s"
+                }}>
+                  <span style={{ fontSize: 14, flexShrink: 0 }}>
+                    {i < loadingStage ? "✓" : i === loadingStage ? "→" : "·"}
+                  </span>
+                  {msg}
+                </div>
+              ))}
+            </div>
+            <p style={{ fontSize: 11, color: "#bbb", marginTop: 20 }}>Don't close this tab — your guide is being generated</p>
+          </div>
+        </div>
+      );
+    }
+
+    // Error screen with retry
+    if (step === 7) {
+      return (
+        <div style={{ maxWidth: 560, margin: "4rem auto", padding: "0 1rem" }}>
+          <div style={{ background: "white", border: "1px solid #fecaca", borderRadius: 16, padding: "2.5rem 2rem", textAlign: "center" }}>
+            <div style={{ fontSize: 40, marginBottom: 16 }}>⚠️</div>
+            <h2 style={{ fontWeight: "normal", color: "#1e3a5f", marginBottom: 10 }}>Something went wrong</h2>
+            <p style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 8 }}>
+              Your payment went through successfully, but we hit an error generating your guide.
+            </p>
+            <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, marginBottom: 20, fontSize: 12, color: "#991b1b", textAlign: "left" }}>
+              <strong>Error:</strong> {error}
+            </div>
+
+            {retryCount < 2 ? (
+              <div>
+                <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>
+                  This usually resolves itself — click below to try again at no charge.
+                  {retryCount === 1 ? " (Final attempt)" : ""}
+                </p>
+                <button className="btn-primary" onClick={handleRetry} style={{ marginBottom: 16 }}>
+                  {retryCount === 0 ? "Try Again — No Charge" : "Try One More Time"}
+                </button>
+                <br />
+              </div>
+            ) : (
+              <div style={{ padding: "12px 16px", background: "#fef3c7", border: "1px solid #f59e0b", borderRadius: 8, marginBottom: 16, fontSize: 13, color: "#78350f" }}>
+                We were unable to generate your guide after multiple attempts.
+              </div>
+            )}
+
+            <p style={{ fontSize: 13, color: "#666" }}>
+              Still having trouble? Email us at{" "}
+              <a href="mailto:chelsea@thehoneyline.co" style={{ color: "#2d5986" }}>
+                chelsea@thehoneyline.co
+              </a>
+              {" "}with your order and we'll resolve it or issue a full refund within 48 hours.
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (step === 6 && guide) {
+      return (
+        <div style={{ maxWidth: 900, margin: "0 auto", padding: "1rem" }}>
+          <GuideDisplay guide={guide} profile={profile} onClearGuide={handleClearGuide} />
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "1rem" }}>
+
+        {/* Landing Hero — only show on step 1 */}
+        {step === 1 && (
+          <div>
+            {/* Hero */}
+            <div style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2d5986 100%)", borderRadius: 16, padding: "2.5rem 2rem", marginBottom: "1.5rem", color: "white", textAlign: "center" }}>
+              <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 10 }}>Expat Family Research Tool</div>
+              <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.6rem)", fontWeight: "normal", lineHeight: 1.2, marginBottom: 14 }}>
+                Stop drowning in tabs.<br />Get a guide built for you and your family.
+              </h1>
+              <p style={{ fontSize: 15, color: "#b8cfe8", lineHeight: 1.7, maxWidth: 480, margin: "0 auto 20px" }}>
+                Researching a move abroad means juggling visa rules, cost of living calculators, school options, pet import requirements, and flight routes — for every city you're considering, all at once.
+              </p>
+              <p style={{ fontSize: 15, color: "white", lineHeight: 1.7, maxWidth: 480, margin: "0 auto" }}>
+                Tell us about your family in 4 steps. We'll generate a <strong>personalized relocation guide</strong> — scored and ranked for <em>your</em> specific situation.
+              </p>
+            </div>
+
+            {/* What you get */}
+            <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 12 }}>What's included in your guide</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                {[
+                  ["✈️", "Visa requirements", "Tailored to your work situation — remote worker, freelancer, retiree, and more"],
+                  ["💰", "Real cost breakdown", "Monthly budget vs. actual costs, rent estimates, and lifestyle affordability"],
+                  ["🚶", "Transit & walkability", "Can you actually live car-free? Scored per city."],
+                  ["🎒", "School options", "Public, bilingual, and international schools for your kids' ages"],
+                  ["🐾", "Pet import logistics", "Exactly what it takes to bring your pet — quarantine risks, timelines, docs"],
+                  ["🛫", "Flights home", "Routes, times, and fare ranges from your specific home airport"],
+                  ["🛡️", "Safety", "Family-focused safety context, not just generic crime stats"],
+                  ["🔗", "Official sources", "Links to government visa pages, transit authorities, and more"],
+                ].map(([icon, title, desc]) => (
+                  <div key={title} style={{ padding: "10px 12px", background: "#f8f9fb", borderRadius: 8, border: "1px solid #e8eef4" }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1e3a5f", marginBottom: 3 }}>{icon} {title}</div>
+                    <div style={{ fontSize: 12, color: "#666", lineHeight: 1.5 }}>{desc}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Social proof / credibility */}
+            <div style={{ background: "#fef9ee", border: "1px solid #f0d980", borderRadius: 12, padding: "1.2rem 1.5rem", marginBottom: "1.5rem", display: "flex", gap: 14, alignItems: "flex-start" }}>
+              <div style={{ fontSize: 28, flexShrink: 0 }}>💬</div>
+              <div>
+                <p style={{ fontSize: 13, color: "#555", lineHeight: 1.7, fontStyle: "italic" }}>
+                  "I lived abroad a couple of times in my 20s and have always planned on doing it again, but I procrastinated on doing the research required since I went from being a party of 1 to a party of 3 + 1 cat. This tool would've done what I was avoiding in just a few minutes."
+                </p>
+                <p style={{ fontSize: 11, color: "#999", marginTop: 6 }}>— The person who built this tool, after doing it the hard way</p>
+              </div>
+            </div>
+
+            {/* Price + CTA nudge */}
+            <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+              <p style={{ fontSize: 13, color: "#888" }}>
+                One-time $5 • Generates in ~60 seconds • Powered by Claude AI
+              </p>
+            </div>
+
+            <div style={{ borderTop: "2px solid #e8eef4", paddingTop: "1.5rem", marginBottom: "1rem" }}>
+              <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 6 }}>Step 1 of 4 — Your family profile</div>
+            </div>
+          </div>
+        )}
+
+        {/* Progress bar — show on steps 2–4 */}
+        {step > 1 && (
+          <div style={{ textAlign: "center", padding: "1.5rem 1rem 1rem", marginBottom: "1rem" }}>
+            <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 6 }}>Expat Family Research Tool</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, maxWidth: 400, margin: "0 auto" }}>
+              <div style={{ flex: 1, height: 4, background: "#e8eef4", borderRadius: 2 }}>
+                <div style={{ width: `${progress}%`, height: "100%", background: "linear-gradient(90deg, #1e3a5f, #2d5986)", borderRadius: 2, transition: "width 0.3s" }} />
+              </div>
+              <span style={{ fontSize: 12, color: "#666", whiteSpace: "nowrap" }}>Step {Math.min(step, 4)} of 4</span>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div style={{ padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, marginBottom: 16, fontSize: 13, color: "#991b1b" }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        {/* STEP 1 — Family Profile */}
+        {step === 1 && (
+          <div>
+            <div className="step-card">
+              <div className="step-label">Step 1 of 4</div>
+              <div className="step-title">Tell us about your family</div>
+
+              <div className="input-row">
+                <div className="input-group">
+                  <label>Number of Adults</label>
+                  <select value={profile.adults} onChange={e => setProfile(p => ({ ...p, adults: parseInt(e.target.value) }))}>
+                    {[1,2,3,4].map(n => <option key={n} value={n}>{n}</option>)}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Monthly Budget (USD)</label>
+                  <input type="number" value={profile.monthlyBudget} min={500} step={500}
+                    onChange={e => setProfile(p => ({ ...p, monthlyBudget: parseInt(e.target.value) }))} />
+                </div>
+              </div>
+
+              <div className="input-row">
+                <div className="input-group" style={{ flex: 2 }}>
+                  <label>Work Situation</label>
+                  <select value={profile.workSituation} onChange={e => setProfile(p => ({ ...p, workSituation: e.target.value }))}>
+                    {WORK_SITUATIONS.map(w => <option key={w} value={w}>{w}</option>)}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Home Airport (code)</label>
+                  <input type="text" placeholder="e.g. ORF, DCA, RIC" maxLength={5}
+                    value={profile.homeAirport}
+                    onChange={e => setProfile(p => ({ ...p, homeAirport: e.target.value.toUpperCase() }))} />
+                </div>
+              </div>
+
+              {/* Children */}
+              <div style={{ marginTop: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <label style={{ fontSize: 11, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em" }}>Children</label>
+                  <button className="btn-secondary" onClick={addChild} style={{ fontSize: 12, padding: "4px 10px" }}>+ Add Child</button>
+                </div>
+                {profile.children.length === 0 && <p style={{ fontSize: 12, color: "#aaa" }}>No children added</p>}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {profile.children.map((c, i) => (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", background: "#f8f9fb", border: "1px solid #e2e8f0", borderRadius: 8 }}>
+                      <span style={{ fontSize: 12 }}>🧒</span>
+                      <input type="number" value={c.age} min={0} max={17} style={{ width: 40, padding: "2px 4px", border: "1px solid #d1d5db", borderRadius: 4, fontSize: 12, textAlign: "center" }}
+                        onChange={e => updateChildAge(i, e.target.value)} />
+                      <span style={{ fontSize: 11, color: "#666" }}>yrs</span>
+                      <button onClick={() => removeChild(i)} style={{ background: "none", border: "none", color: "#999", fontSize: 14 }}>×</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Pets */}
+              <div style={{ marginTop: 14 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                  <label style={{ fontSize: 11, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em" }}>Pets</label>
+                  <button className="btn-secondary" onClick={addPet} style={{ fontSize: 12, padding: "4px 10px" }}>+ Add Pet</button>
+                </div>
+                {profile.pets.length === 0 && <p style={{ fontSize: 12, color: "#aaa" }}>No pets added</p>}
+                {profile.pets.map((pet, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                    <select value={pet.type} onChange={e => updatePet(i, 'type', e.target.value)} style={{ padding: "6px 8px", border: "1px solid #d1d5db", borderRadius: 6, fontSize: 13 }}>
+                      {PET_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                    <input type="number" value={pet.count} min={1} max={10} style={{ width: 50, padding: "6px 8px", border: "1px solid #d1d5db", borderRadius: 6, fontSize: 13, textAlign: "center" }}
+                      onChange={e => updatePet(i, 'count', parseInt(e.target.value))} />
+                    <span style={{ fontSize: 12, color: "#666" }}>animal(s)</span>
+                    <button onClick={() => removePet(i)} style={{ background: "none", border: "none", color: "#999", fontSize: 16 }}>×</button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Car-free */}
+              <div style={{ marginTop: 14, display: "flex", alignItems: "center", gap: 10 }}>
+                <input type="checkbox" id="carfree" checked={profile.carFree}
+                  onChange={e => setProfile(p => ({ ...p, carFree: e.target.checked }))}
+                  style={{ width: 16, height: 16, cursor: "pointer" }} />
+                <label htmlFor="carfree" style={{ fontSize: 13, cursor: "pointer" }}>
+                  🚶 We prefer <strong>car-free living</strong> (transit, walking, biking)
+                </label>
+              </div>
+            </div>
+
+            {/* Must-haves */}
+            <div className="step-card">
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#1e3a5f", marginBottom: 8 }}>Any deal-breakers or must-haves?</div>
+              <div className="checkbox-group">
+                {mustHaveOptions.map(item => (
+                  <div key={item} className={`checkbox-chip ${profile.mustHaves.includes(item) ? 'checked' : ''}`}
+                    onClick={() => toggleMustHave(item)}>
+                    {profile.mustHaves.includes(item) ? '✓' : '+'} {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <button className="btn-primary" onClick={() => setStep(2)}>Next: Choose Destinations →</button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 2 — Destinations */}
+        {step === 2 && (
+          <div>
+            <div className="step-card">
+              <div className="step-label">Step 2 of 4</div>
+              <div className="step-title">Which destinations should we research?</div>
+              <p style={{ fontSize: 12, color: "#666", marginBottom: 14 }}>Select from the curated list below, or type in any city. We recommend 3–8 destinations for the best guide.</p>
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 16 }}>
+                {CURATED_DESTINATIONS.map(d => (
+                  <div key={d.name} className={`dest-chip ${profile.destinations.includes(d.name) ? 'selected' : ''}`}
+                    onClick={() => toggleDestination(d.name)}>
+                    {d.flag} {d.name}
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ borderTop: "1px solid #e8eef4", paddingTop: 14 }}>
+                <label style={{ fontSize: 11, color: "#666", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: 6 }}>Add a custom destination</label>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <input type="text" placeholder="e.g. Tbilisi, Georgia" value={customDest}
+                    onChange={e => setCustomDest(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && addCustomDest()}
+                    style={{ flex: 1, padding: "8px 10px", border: "1px solid #d1d5db", borderRadius: 6, fontSize: 14 }} />
+                  <button className="btn-secondary" onClick={addCustomDest}>Add</button>
+                </div>
+              </div>
+
+              {profile.destinations.length > 0 && (
+                <div style={{ marginTop: 14 }}>
+                  <div style={{ fontSize: 12, color: "#1e3a5f", fontWeight: 600, marginBottom: 6 }}>Selected ({profile.destinations.length}):</div>
+                  <div className="tag-list">
+                    {profile.destinations.map(d => (
+                      <div key={d} className="tag">
+                        {d}
+                        <button onClick={() => toggleDestination(d)}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button className="btn-secondary" onClick={() => setStep(1)}>← Back</button>
+              <button className="btn-primary" onClick={() => setStep(3)} disabled={profile.destinations.length === 0}>
+                Next: Set Priorities →
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 3 — Priorities */}
+        {step === 3 && (
+          <div>
+            <div className="step-card">
+              <div className="step-label">Step 3 of 4</div>
+              <div className="step-title">Rank what matters most to your family</div>
+              <PriorityRanker
+                priorities={profile.priorities}
+                onChange={(newOrder) => setProfile(p => ({ ...p, priorities: newOrder }))}
+              />
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button className="btn-secondary" onClick={() => setStep(2)}>← Back</button>
+              <button className="btn-primary" onClick={() => setStep(4)}>Next: Review & Pay →</button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 4 — Review & Pay */}
+        {step === 4 && (
+          <div>
+            <div className="step-card">
+              <div className="step-label">Step 4 of 4</div>
+              <div className="step-title">Review your profile</div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+                {[
+                  ["👨‍👩‍👧", "Family", `${profile.adults} adult(s)${profile.children.length > 0 ? `, ${profile.children.map(c => `${c.age}yo`).join(', ')}` : ''}`],
+                  ["💼", "Work", profile.workSituation],
+                  ["💰", "Budget", `$${profile.monthlyBudget.toLocaleString()}/mo`],
+                  ["✈️", "Home airport", profile.homeAirport || "Not set"],
+                  ["🐾", "Pets", profile.pets.length > 0 ? profile.pets.map(p => `${p.count} ${p.type}`).join(', ') : "None"],
+                  ["🚶", "Car-free", profile.carFree ? "Yes, preferred" : "Car is OK"],
+                ].map(([icon, label, value]) => (
+                  <div key={label} style={{ padding: "10px 12px", background: "#f8f9fb", borderRadius: 8, border: "1px solid #e2e8f0" }}>
+                    <div style={{ fontSize: 11, color: "#888", marginBottom: 2 }}>{icon} {label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 500 }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>📍 Destinations ({profile.destinations.length})</div>
+                <div className="tag-list">
+                  {profile.destinations.map(d => <span key={d} className="tag">{d}</span>)}
+                </div>
+              </div>
+
+              <div>
+                <div style={{ fontSize: 12, color: "#666", marginBottom: 6 }}>🎯 Top priorities</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {profile.priorities.slice(0, 4).map((p, i) => (
+                    <span key={p} style={{ fontSize: 11, padding: "3px 8px", background: "#e8f0fb", border: "1px solid #bfdbfe", borderRadius: 12, color: "#1e3a5f" }}>
+                      {i + 1}. {p}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="payment-box">
+              <div style={{ fontSize: 28, marginBottom: 8 }}>🗺️</div>
+              <h2 style={{ fontWeight: "normal", marginBottom: 8 }}>Your personalized guide is ready to generate</h2>
+              <p style={{ fontSize: 13, color: "#b8cfe8", marginBottom: 20 }}>
+                Claude will research each of your {profile.destinations.length} destinations tailored to your exact family profile —
+                visa options for your work situation, costs vs. your budget, pet import specifics, and more.
+              </p>
+              <div style={{ fontSize: 13, color: "#e2e8f0", marginBottom: 20 }}>
+                {profile.destinations.length} destinations × 8 categories = comprehensive research report
+              </div>
+              <button className="btn-primary"
+                style={{ background: "white", color: "#1e3a5f", fontSize: 16, padding: "14px 36px" }}
+                onClick={handlePayment}
+                disabled={loading}>
+                {loading ? 'Connecting to payment…' : 'Generate My Guide — $5'}
+              </button>
+              <p style={{ fontSize: 11, color: "#7fb3d3", marginTop: 12 }}>Secure payment via Stripe • One-time charge</p>
+            </div>
+
+            <div style={{ marginTop: 12, display: "flex", justifyContent: "flex-start" }}>
+              <button className="btn-secondary" onClick={() => setStep(3)}>← Back</button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
