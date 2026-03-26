@@ -264,7 +264,7 @@
 
   // ── CONFIGURATION ──────────────────────────────────────────────────────────
   // Replace with your Vercel backend URL after deploying
-  const API_BASE = 'https://expat-guide-api.vercel.app';
+  const API_BASE = 'https://YOUR-VERCEL-APP.vercel.app';
   // ──────────────────────────────────────────────────────────────────────────
 
   const CURATED_DESTINATIONS = [
@@ -347,37 +347,88 @@
 
   const scoreColor = (s) => s >= 4 ? "#16a34a" : s === 3 ? "#ca8a04" : "#dc2626";
 
-  // ── DRAG TO REORDER PRIORITIES ─────────────────────────────────────────────
+  // ── DRAG TO REORDER PRIORITIES (touch + mouse) ────────────────────────────
   function PriorityRanker({ priorities, onChange }) {
-    const dragItem = useRef(null);
-    const dragOver = useRef(null);
+    const [draggingIndex, setDraggingIndex] = useState(null);
+    const [overIndex, setOverIndex] = useState(null);
+    const listRef = useRef(null);
+    const touchStartY = useRef(null);
+    const touchItemHeight = useRef(null);
 
-    const handleDragStart = (i) => { dragItem.current = i; };
-    const handleDragEnter = (i) => { dragOver.current = i; };
+    // ── MOUSE DRAG ──
+    const handleDragStart = (i) => setDraggingIndex(i);
+    const handleDragEnter = (i) => setOverIndex(i);
     const handleDragEnd = () => {
-      const arr = [...priorities];
-      const dragged = arr.splice(dragItem.current, 1)[0];
-      arr.splice(dragOver.current, 0, dragged);
-      dragItem.current = null;
-      dragOver.current = null;
-      onChange(arr);
+      if (draggingIndex !== null && overIndex !== null && draggingIndex !== overIndex) {
+        const arr = [...priorities];
+        const dragged = arr.splice(draggingIndex, 1)[0];
+        arr.splice(overIndex, 0, dragged);
+        onChange(arr);
+      }
+      setDraggingIndex(null);
+      setOverIndex(null);
+    };
+
+    // ── TOUCH DRAG ──
+    const handleTouchStart = (e, i) => {
+      setDraggingIndex(i);
+      touchStartY.current = e.touches[0].clientY;
+      const items = listRef.current?.querySelectorAll('.priority-item');
+      if (items && items.length > 0) {
+        touchItemHeight.current = items[0].getBoundingClientRect().height + 6; // height + gap
+      }
+      e.preventDefault();
+    };
+
+    const handleTouchMove = (e) => {
+      if (draggingIndex === null || touchStartY.current === null) return;
+      const dy = e.touches[0].clientY - touchStartY.current;
+      const steps = Math.round(dy / (touchItemHeight.current || 52));
+      const newOver = Math.max(0, Math.min(priorities.length - 1, draggingIndex + steps));
+      setOverIndex(newOver);
+      e.preventDefault();
+    };
+
+    const handleTouchEnd = () => {
+      if (draggingIndex !== null && overIndex !== null && draggingIndex !== overIndex) {
+        const arr = [...priorities];
+        const dragged = arr.splice(draggingIndex, 1)[0];
+        arr.splice(overIndex, 0, dragged);
+        onChange(arr);
+      }
+      setDraggingIndex(null);
+      setOverIndex(null);
+      touchStartY.current = null;
     };
 
     return (
       <div>
-        <p style={{ fontSize: 13, color: "#666", marginBottom: 10 }}>Drag to reorder — #1 is most important to your family</p>
-        {priorities.map((p, i) => (
-          <div key={p} className="priority-item"
-            draggable
-            onDragStart={() => handleDragStart(i)}
-            onDragEnter={() => handleDragEnter(i)}
-            onDragEnd={handleDragEnd}
-            onDragOver={e => e.preventDefault()}>
-            <div className="priority-rank">{i + 1}</div>
-            <span style={{ fontSize: 14, flex: 1 }}>{p}</span>
-            <span style={{ color: "#ccc", fontSize: 16 }}>⠿</span>
-          </div>
-        ))}
+        <p style={{ fontSize: 13, color: "#666", marginBottom: 10 }}>
+          Drag to reorder — #1 is most important to your family
+        </p>
+        <div ref={listRef} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+          {priorities.map((p, i) => (
+            <div key={p} className="priority-item"
+              draggable
+              onDragStart={() => handleDragStart(i)}
+              onDragEnter={() => handleDragEnter(i)}
+              onDragEnd={handleDragEnd}
+              onDragOver={e => e.preventDefault()}
+              onTouchStart={e => handleTouchStart(e, i)}
+              style={{
+                opacity: draggingIndex === i ? 0.4 : 1,
+                background: overIndex === i && draggingIndex !== i ? "#e8f0fb" : undefined,
+                border: overIndex === i && draggingIndex !== i ? "1px solid #2d5986" : undefined,
+                transform: draggingIndex === i ? "scale(1.02)" : "none",
+                transition: "opacity 0.15s, background 0.15s, transform 0.15s",
+                touchAction: "none",
+              }}>
+              <div className="priority-rank">{i + 1}</div>
+              <span style={{ fontSize: 14, flex: 1 }}>{p}</span>
+              <span style={{ color: "#aaa", fontSize: 20, lineHeight: 1, cursor: "grab" }}>⠿</span>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -464,7 +515,7 @@
           <div style={{ fontSize: 11, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 6 }}>Your Personalized Expat Guide</div>
           <h1 style={{ fontSize: "clamp(1.3rem, 3vw, 2rem)", fontWeight: "normal", marginBottom: 8 }}>Where Should Your Family Live?</h1>
           <p style={{ fontSize: 13, color: "#b8cfe8" }}>{guide.familySummary}</p>
-          {guide.topPick && (
+          {guide.topPick && guide.destinations && guide.destinations.length > 1 && (
             <div style={{ marginTop: 12, padding: "10px 14px", background: "rgba(201,168,76,0.2)", border: "1px solid #c9a84c", borderRadius: 8, fontSize: 13 }}>
               ⭐ <strong>Top pick for your family:</strong> {guide.topPick}
             </div>
@@ -518,7 +569,7 @@
                   )}
 
                   {/* Pros / Cons */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10, marginBottom: 14 }}>
                     <div style={{ padding: "10px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
                       <strong style={{ fontSize: 12, color: "#166534", display: "block", marginBottom: 6 }}>✅ PROS</strong>
                       {dest.pros?.map((p, i) => <div key={i} style={{ fontSize: 13, color: "#166534", marginBottom: 4 }}>• {p}</div>)}
@@ -747,7 +798,7 @@
 
     const handleRetry = () => {
       if (retryCount >= 2) {
-        setError('We were unable to generate your guide after multiple attempts. Please email us at chelsea@thehoneyline.co with your order and we will resolve it within 24 hours.');
+        setError('We were unable to generate your guide after multiple attempts. Please email us at support@expatfamilyguide.com with your order and we will resolve it within 24 hours.');
         return;
       }
       setRetryCount(c => c + 1);
@@ -879,10 +930,10 @@
 
             <p style={{ fontSize: 13, color: "#666" }}>
               Still having trouble? Email us at{" "}
-              <a href="mailto:chelsea@thehoneyline.co" style={{ color: "#2d5986" }}>
-                chelsea@thehoneyline.co
+              <a href="mailto:support@expatfamilyguide.com" style={{ color: "#2d5986" }}>
+                support@expatfamilyguide.com
               </a>
-              {" "}with your order and we'll resolve it or issue a full refund within 48 hours.
+              {" "}with your order and we'll resolve it or issue a full refund within 24 hours.
             </p>
           </div>
         </div>
@@ -907,7 +958,7 @@
             <div style={{ background: "linear-gradient(135deg, #1e3a5f 0%, #2d5986 100%)", borderRadius: 16, padding: "2.5rem 2rem", marginBottom: "1.5rem", color: "white", textAlign: "center" }}>
               <div style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 10 }}>Expat Family Research Tool</div>
               <h1 style={{ fontSize: "clamp(1.6rem, 5vw, 2.6rem)", fontWeight: "normal", lineHeight: 1.2, marginBottom: 14 }}>
-                Stop drowning in tabs.<br />Get a guide built for you and your family.
+                Stop drowning in tabs.<br />Get a guide built for your family.
               </h1>
               <p style={{ fontSize: 15, color: "#b8cfe8", lineHeight: 1.7, maxWidth: 480, margin: "0 auto 20px" }}>
                 Researching a move abroad means juggling visa rules, cost of living calculators, school options, pet import requirements, and flight routes — for every city you're considering, all at once.
@@ -920,7 +971,7 @@
             {/* What you get */}
             <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 12, padding: "1.5rem", marginBottom: "1.5rem" }}>
               <div style={{ fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", color: "#c9a84c", marginBottom: 12 }}>What's included in your guide</div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10 }}>
                 {[
                   ["✈️", "Visa requirements", "Tailored to your work situation — remote worker, freelancer, retiree, and more"],
                   ["💰", "Real cost breakdown", "Monthly budget vs. actual costs, rent estimates, and lifestyle affordability"],
@@ -944,7 +995,7 @@
               <div style={{ fontSize: 28, flexShrink: 0 }}>💬</div>
               <div>
                 <p style={{ fontSize: 13, color: "#555", lineHeight: 1.7, fontStyle: "italic" }}>
-                  "I lived abroad a couple of times in my 20s and have always planned on doing it again, but I procrastinated on doing the research required since I went from being a party of 1 to a party of 3 + 1 cat. This tool would've done what I was avoiding in just a few minutes."
+                  "I spent three weeks in spreadsheets before my sabbatical trying to compare Mexico City, Montréal, and Barcelona for our family — visa rules, schools for our 4-year-old, what to do with our cat. This tool would have saved me all of it."
                 </p>
                 <p style={{ fontSize: 11, color: "#999", marginTop: 6 }}>— The person who built this tool, after doing it the hard way</p>
               </div>
@@ -1011,10 +1062,77 @@
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Home Airport (code)</label>
-                  <input type="text" placeholder="e.g. ORF, DCA, RIC" maxLength={5}
+                  <label>Home Airport</label>
+                  <input type="text" placeholder="Search city or code…" maxLength={50}
+                    list="airport-list"
                     value={profile.homeAirport}
-                    onChange={e => setProfile(p => ({ ...p, homeAirport: e.target.value.toUpperCase() }))} />
+                    onChange={e => {
+                      // If they picked from the datalist (format "CODE — City"), extract the code
+                      const val = e.target.value;
+                      const codeMatch = val.match(/^([A-Z]{3})/);
+                      setProfile(p => ({ ...p, homeAirport: codeMatch ? codeMatch[1] : val.toUpperCase() }));
+                    }} />
+                  <datalist id="airport-list">
+                    <option value="ATL — Atlanta, GA" />
+                    <option value="AUS — Austin, TX" />
+                    <option value="BNA — Nashville, TN" />
+                    <option value="BOS — Boston, MA" />
+                    <option value="BUF — Buffalo, NY" />
+                    <option value="BWI — Baltimore/Washington, MD" />
+                    <option value="CLE — Cleveland, OH" />
+                    <option value="CLT — Charlotte, NC" />
+                    <option value="CMH — Columbus, OH" />
+                    <option value="CVG — Cincinnati, OH" />
+                    <option value="DAL — Dallas Love Field, TX" />
+                    <option value="DCA — Washington Reagan, DC" />
+                    <option value="DEN — Denver, CO" />
+                    <option value="DFW — Dallas/Fort Worth, TX" />
+                    <option value="DTW — Detroit, MI" />
+                    <option value="EWR — Newark, NJ" />
+                    <option value="FLL — Fort Lauderdale, FL" />
+                    <option value="HNL — Honolulu, HI" />
+                    <option value="HOU — Houston Hobby, TX" />
+                    <option value="IAD — Washington Dulles, DC" />
+                    <option value="IAH — Houston Bush, TX" />
+                    <option value="IND — Indianapolis, IN" />
+                    <option value="JAX — Jacksonville, FL" />
+                    <option value="JFK — New York JFK, NY" />
+                    <option value="LAS — Las Vegas, NV" />
+                    <option value="LAX — Los Angeles, CA" />
+                    <option value="LGA — New York LaGuardia, NY" />
+                    <option value="MCI — Kansas City, MO" />
+                    <option value="MCO — Orlando, FL" />
+                    <option value="MDW — Chicago Midway, IL" />
+                    <option value="MEM — Memphis, TN" />
+                    <option value="MIA — Miami, FL" />
+                    <option value="MKE — Milwaukee, WI" />
+                    <option value="MSP — Minneapolis, MN" />
+                    <option value="MSY — New Orleans, LA" />
+                    <option value="OAK — Oakland, CA" />
+                    <option value="OGG — Maui, HI" />
+                    <option value="ORD — Chicago O'Hare, IL" />
+                    <option value="ORF — Norfolk, VA" />
+                    <option value="PDX — Portland, OR" />
+                    <option value="PHL — Philadelphia, PA" />
+                    <option value="PHX — Phoenix, AZ" />
+                    <option value="PIT — Pittsburgh, PA" />
+                    <option value="PVD — Providence, RI" />
+                    <option value="RDU — Raleigh-Durham, NC" />
+                    <option value="RIC — Richmond, VA" />
+                    <option value="RSW — Fort Myers, FL" />
+                    <option value="SAN — San Diego, CA" />
+                    <option value="SAT — San Antonio, TX" />
+                    <option value="SAV — Savannah, GA" />
+                    <option value="SEA — Seattle, WA" />
+                    <option value="SFO — San Francisco, CA" />
+                    <option value="SJC — San Jose, CA" />
+                    <option value="SLC — Salt Lake City, UT" />
+                    <option value="SMF — Sacramento, CA" />
+                    <option value="SNA — Orange County, CA" />
+                    <option value="STL — St. Louis, MO" />
+                    <option value="TPA — Tampa, FL" />
+                    <option value="TUL — Tulsa, OK" />
+                  </datalist>
                 </div>
               </div>
 
